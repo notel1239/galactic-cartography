@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Plot mass-metallicity relation for galaxies.
+Plot mass-metallicity relation for galaxies with star formation rate color mapping.
 """
 
 import numpy as np
@@ -14,10 +14,18 @@ def main():
     
     stellar_mass = data['stellar_mass']
     gas_metallicity = data['gas_metallicity']
+    star_formation_rate = data['star_formation_rate']
     
     # Create figure
-    plt.figure(figsize=(8, 6))
-    plt.scatter(stellar_mass, gas_metallicity, alpha=0.7, edgecolors='k', linewidth=0.5)
+    plt.figure(figsize=(9, 6))
+    
+    # Scatter plot with color representing star formation rate
+    sc = plt.scatter(stellar_mass, gas_metallicity, 
+                     c=star_formation_rate, 
+                     cmap='viridis', 
+                     alpha=0.8, 
+                     edgecolors='k', 
+                     linewidth=0.5)
     
     # Set logarithmic scale for mass axis (galaxy masses span many orders of magnitude)
     plt.xscale('log')
@@ -25,8 +33,12 @@ def main():
     # Labels and title
     plt.xlabel('Stellar Mass [M$_\odot$]', fontsize=14)
     plt.ylabel('Gas Metallicity [Z$_\odot$]', fontsize=14)
-    plt.title('Galaxy Mass-Metallicity Relation', fontsize=16)
+    plt.title('Galaxy Mass-Metallicity Relation (colored by SFR)', fontsize=16)
     plt.grid(True, which='both', linestyle='--', alpha=0.5)
+    
+    # Add colorbar
+    cbar = plt.colorbar(sc)
+    cbar.set_label('Star Formation Rate [M$_\odot$ yr$^{-1}$]', fontsize=12)
     
     # Ensure output directory exists
     output_dir = os.path.join(os.path.dirname(__file__), '../output')
